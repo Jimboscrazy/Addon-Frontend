@@ -73,6 +73,10 @@ if (isset($configuration['repositories']) && is_array($configuration['repositori
 			$id = (string) $addon['id'];
 			$broken = '';
 			$extensionPoint = '';
+			$platform = '';
+			$video_guide = '';
+			$video_preview = '';
+			$genre = '';
 			$contentTypes = array();
 			$downloadCount = isset($downloadStats[$id]) ? $downloadStats[$id] : 0;
 
@@ -127,18 +131,62 @@ if (isset($configuration['repositories']) && is_array($configuration['repositori
 						if ($extensionPoint == 'xbmc.addon.image') {
 							$contentTypes[] = 'image';
 						}
-						// move scripts with no "provides" data to "executable"
-						if ($extensionPoint == 'xbmc.python.script' && !count($contentTypes)) {
-							if (strpos($id, 'script.game') !== FALSE) {
-								$contentTypes[] = 'game';
-							} else {
-								$contentTypes[] = 'executable';
-							}
+						if ($extensionPoint == 'xbmc.python.script') {
+							$contentTypes[] = 'executable';
 						}
+						if ($extensionPoint == 'xbmc.gui.skin') {
+							$contentTypes[] = 'skin';
+						}	
+						if ($extensionPoint == 'xbmc.python.module') {
+							$contentTypes[] = 'script module';
+						}
+						if ($extensionPoint == 'xbmc.service') {
+							$contentTypes[] = 'service';
+						}	
+						if ($extensionPoint == 'xbmc.gui.webinterface') {
+							$contentTypes[] = 'web interface';
+						}	
+						if ($extensionPoint == 'xbmc.python.weather') {
+							$contentTypes[] = 'weather service';
+						}	
+						if ($extensionPoint == 'xbmc.ui.screensaver') {
+							$contentTypes[] = 'screensaver';
+						}	
+						if ($extensionPoint == 'xbmc.metadata.scraper.movies') {
+							$contentTypes[] = 'movie scraper';
+						}	
+						if ($extensionPoint == 'xbmc.metadata.scraper.tvshows') {
+							$contentTypes[] = 'tv show scraper';
+						}	
+						if ($extensionPoint == 'xbmc.metadata.scraper.artists') {
+							$contentTypes[] = 'artist scraper';
+						}
+						if ($extensionPoint == 'xbmc.metadata.scraper.musicvideos') {
+							$contentTypes[] = 'music video scraper';
+						}	
+						if ($extensionPoint == 'xbmc.ui.subtitles') {
+							$contentTypes[] = 'subtitles service';
+						}	
 
 					// grab metadata
 					} else if ($node['point'] == 'xbmc.addon.metadata' && $node->children()) {
 						foreach ($node->children() as $subNodeName => $subNode) {
+							// Check for genre status
+							if ($subNodeName == 'genre') {
+								$genre = $subNode;
+							}
+							// Check for platform status
+							if ($subNodeName == 'platform') {
+								$platform = $subNode;
+							}
+							// Check for videoguide status
+							if ($subNodeName == 'video_guide') {
+								$video_guide = $subNode;
+							}
+							// Check for videopreview status
+							if ($subNodeName == 'video_preview') {
+								$video_preview = $subNode;
+							}
 							// Check for the Forum XML Subnode
 							if ($subNodeName == 'forum') {
 								$forum = $subNode;
@@ -193,7 +241,7 @@ if (isset($configuration['repositories']) && is_array($configuration['repositori
 			if (isset($addonCache['existing'][$id])) {
 				//Item exists
 				//Check here to see if the addon needs to be updated
-				$updateQuery = ' deleted = 0, name = "' . $db->escape($name) . '", provider_name = "' . $db->escape($author) . '", description = "' . $db->escape($description) . '", forum = "' . $db->escape($forum) . '", website = "' . $db->escape($website) . '", source = "' . $db->escape($source) . '", license = "' . $db->escape($license) . '", downloads = ' . $downloadCount . ', extension_point="' . $extensionPoint . '", content_types="' . implode(',', $contentTypes) . '", broken="' . $db->escape($broken) . '", repository_id="' . $db->escape($repositoryId) . '"';
+				$updateQuery = ' deleted = 0, name = "' . $db->escape($name) . '", provider_name = "' . $db->escape($author) . '", description = "' . $db->escape($description) . '", forum = "' . $db->escape($forum) . '", genre = "' . $db->escape($genre) . '", platform = "' . $db->escape($platform) . '", video_guide = "' . $db->escape($video_guide) . '", video_preview = "' . $db->escape($video_preview) . '", website = "' . $db->escape($website) . '", source = "' . $db->escape($source) . '", license = "' . $db->escape($license) . '", downloads = ' . $downloadCount . ', extension_point="' . $extensionPoint . '", content_types="' . implode(',', $contentTypes) . '", broken="' . $db->escape($broken) . '", repository_id="' . $db->escape($repositoryId) . '"';
 					// only update timestamp on new version
 				if ($addonCache['existing'][$id]->version != $addon['version']) {
 					$counterUpdated++;
@@ -205,7 +253,7 @@ if (isset($configuration['repositories']) && is_array($configuration['repositori
 			// Add a new add-on if it doesn't exist
 			} else {
 				$counterNewlyAdded++;
-				$db->query('INSERT INTO addon (id, name, provider_name, version, description, created, updated, forum, website, source, license, downloads, extension_point, content_types, broken, deleted, repository_id) VALUES ("' . $db->escape($id) . '", "' . $db->escape($name) . '", "' . $db->escape($author) . '", "' . $db->escape($addon['version']) . '", "' . $db->escape($description) . '", NOW(), NOW(), "' . $db->escape($forum) . '", "' . $db->escape($website) . '", "' . $db->escape($source) . '", "' . $db->escape($license) . '", ' . $downloadCount . ', "' . $extensionPoint . '", "' . implode(',', $contentTypes) . '", "' . $db->escape($broken) . '", 0, "' . $db->escape($repositoryId) . '")');
+				$db->query('INSERT INTO addon (id, name, provider_name, version, description, created, updated, forum, genre, platform, video_guide, video_preview, website, source, license, downloads, extension_point, content_types, broken, deleted, repository_id) VALUES ("' . $db->escape($id) . '", "' . $db->escape($name) . '", "' . $db->escape($author) . '", "' . $db->escape($addon['version']) . '", "' . $db->escape($description) . '", NOW(), NOW(), "' . $db->escape($forum) . '", "' . $db->escape($website) . '", "' . $db->escape($source) . '", "' . $db->escape($license) . '", ' . $downloadCount . ', "' . $extensionPoint . '", "' . implode(',', $contentTypes) . '", "' . $db->escape($broken) . '", 0, "' . $db->escape($repositoryId) . '")');
 			}
 
 			cacheAddonData($id, $repositoryId);

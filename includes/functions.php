@@ -146,7 +146,7 @@ function getRepositoryConfiguration($repositoryId) {
 function renderFlashMessage($headline, $message, $type = 'info') {
 	return '<div class="flashmessage flashmessage-' . $type . '">
 		<h3>' . $headline . '</h3>
-		<p>' . $message . '</p>
+		<h1>' . $message . '</h1>
 	</div>';
 }
 

@@ -227,14 +227,12 @@ input[type=submit]:focus	{
 
 
 /* ---- Header ---- */
-#header			{
-				width:980px;
-				min-height:50px;
-				_height:50px;
-				margin:0 auto;
-				padding:12px 30px 7px;
-				position:relative;
-				}
+#header { min-height: 120px; background: #f8f9f9; z-index: 445; position: relative; }
+	
+	#header #logo-wrapper { font-size: 12px; margin-top: 39px; }
+		#header #logo-wrapper p { padding-top: 22px; color: #333; }
+		#header #logo-wrapper a { display: block; border: 0; float: left; margin: 0 10px 0 0; font-size: 40px; line-height: 1; letter-spacing: -2px; -webkit-font-smoothing: antialiased; }
+		#header #logo-wrapper a:hover { opacity: 0.8; filter: alpha(opacity=80); }
 
 a.logo			{
 				width:auto;
@@ -1259,8 +1257,8 @@ div:hover.hover_box	{background:#EBEBEB;}
 				height:14px;
 				padding:0;
 				position:absolute;
-				top:6px;
-				right:8px;
+				top:14px;
+				right:2px;
 				overflow:hidden;
 				cursor:pointer;
 				text-indent:-9999px;
@@ -1272,18 +1270,15 @@ div:hover.hover_box	{background:#EBEBEB;}
 /* ---- Breadcrumbs ---- */
 
 #breadcrumbs	{
-				width:940px;
+				width:975px;
 				margin:-25px auto 10px;
-				padding:15px 19px 12px;
+/*				padding:15px 19px 12px; */
 				font:0.95em Arial, Helvetica, sans-serif;
 				text-transform:capitalize;
 				color:#8c8c8c;
-				border:1px solid #DCDCDC;
-				border-radius:5px;
 				-moz-border-radius:5px;
 				-khtml-border-radius:5px;
 				-webkit-border-radius:5px;
-				background:#fff;
 				position:relative;
 				z-index:999;
 				}
@@ -1294,7 +1289,7 @@ div:hover.hover_box	{background:#EBEBEB;}
 				}
 				
 #breadcrumbs a:hover	{
-				color:#000;
+				color:#FFFFFF;
 				text-decoration:none;
 				}
 				
